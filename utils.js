@@ -48,5 +48,12 @@ function parseXml(xmlString) {
   return root
 }
 
-export { parseXml }
-export { parseBody }
+function jsonParse(data, failback) {
+  try {
+    return JSON.parse(data)
+  } catch (e) {
+    return failback
+  }
+}
+
+export { parseXml, parseBody , jsonParse }

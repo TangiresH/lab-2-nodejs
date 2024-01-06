@@ -5,7 +5,7 @@ import {
   travelGuideHandler,
   musicPlaylistHandler
 } from './controller.js'
-import { parseBody } from './utils.js'
+import { parseBody, parseXml, jsonParse } from './utils.js'
 
 const routes = {
   '': defaultHandler,
@@ -14,6 +14,16 @@ const routes = {
   'travel-guide': travelGuideHandler,
   'music-playlist': musicPlaylistHandler
 }
+
+const contentTypes = {
+  'text/html': (text) => text,
+  'application/json': (json) => jsonParse(json, {}),
+  'application/xml': (xml) => parseXml(xml),
+  'application/x-www-form-urlencoded': (data) => {
+    return Object.fromEntries(new URLSearchParams(data))
+  }
+}
+
 
 export default async function router(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`)
@@ -25,7 +35,9 @@ export default async function router(req, res) {
     if (req.method === 'POST') {
       try {
         const body = await parseBody(req)
-        handler(req, res, { routeName, body })
+        const filteredBody = contentTypes[req.headers['content-type']](body)
+        console.log(filteredBody)
+        handler(req, res, { routeName, filteredBody })
       } catch (error) {
         console.error('Error parsing body:', error)
         res.writeHead(400, { 'Content-Type': 'text/plain' })
