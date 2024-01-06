@@ -3,4 +3,8 @@ function sendResponse(res, statusCode, contentType, data) {
   res.end(data)
 }
 
-export { sendResponse }
+function json(res, data) {
+  res.end(JSON.stringify(data))
+}
+
+export { sendResponse, json }
