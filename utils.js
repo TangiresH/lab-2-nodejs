@@ -56,4 +56,4 @@ function jsonParse(data, failback) {
   }
 }
 
-export { parseXml, parseBody , jsonParse }
+export { parseXml, parseBody, jsonParse }

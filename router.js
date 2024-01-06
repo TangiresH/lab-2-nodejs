@@ -24,7 +24,6 @@ const contentTypes = {
   }
 }
 
-
 export default async function router(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`)
   const routeName = url.pathname.slice(1)
