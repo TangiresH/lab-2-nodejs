@@ -16,4 +16,37 @@ function parseBody(req) {
   })
 }
 
+function parseXml(xmlString) {
+  const cleanXmlString = xmlString.replace(/\n/g, '').replace(/ /g, '')
+
+  const tokens = cleanXmlString.split(/<|>/).filter(Boolean)
+
+  const root = {}
+  const stack = [root]
+  let currentElement = root
+
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i].trim()
+
+    if (token.startsWith('/')) {
+      stack.pop()
+      currentElement = stack[stack.length - 1]
+    } else if (token) {
+      const [tagName, content] = token.split(/\s(.+)/)
+      const newElement = { tagName, content: content ? [content] : [] }
+
+      if (!currentElement[tagName]) {
+        currentElement[tagName] = []
+      }
+
+      currentElement[tagName].push(newElement)
+      stack.push(newElement)
+      currentElement = newElement
+    }
+  }
+
+  return root
+}
+
+export { parseXml }
 export { parseBody }
