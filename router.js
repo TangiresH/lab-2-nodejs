@@ -8,7 +8,7 @@ import {
 import { parseBody } from './utils.js'
 
 const routes = {
-  default: defaultHandler,
+  '': defaultHandler,
   'movie-details': movieDetailsHandler,
   recipe: recipeHandler,
   'travel-guide': travelGuideHandler,
